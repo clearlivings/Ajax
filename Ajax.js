@@ -33,3 +33,44 @@ function createXHR() {
     }
     return xhr;
 }
+    function ajax(options) {
+        var _default = {
+            url: "",
+            type: "get",
+            async: true,
+            dataType: 'json',
+            requestHead: null, //请求主体
+            data: null, // 放在请求主体中的内容（post）
+            success: null
+        };
+        var xhr = createXHR();
+        for (var key in options) {
+            if (_default.hasOwnProperty(key)) {
+                _default[key] = options[key];
+            }
+        }
+        if (_default.type === "get") {
+            _default.url.indexOf("?") >= 0 ? _default.url += "&" : _default.url += "?";
+            _default.url += "_=" + Math.random();
+        }
+        xhr.open(_default.type, _default.url, _default.async);
+        xhr.onreadystatechange = function () {
+            if (/^2\d{2}$/.test(xhr.status)) {
+                if (xhr.readyState == 2) {
+                    if (_default.requestHead === "function") {
+                        _default.requestHead.call(xhr);
+                    }
+                }
+                if (xhr.readyState == 4) {
+                    var val = xhr.responseText;
+                    if (_default.data === "json") {
+                        val = "JSON" in window ? JSON.parse(val) : eval("(" + val + ")");
+                    }
+                    _default.success && _default.success.call(xhr, val);
+                }
+            }
+        };
+        xhr.send(_default.data);
+    }
+    window.ajax = ajax;
+}();
