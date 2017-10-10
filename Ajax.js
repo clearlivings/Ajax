@@ -1,7 +1,8 @@
 /**
  * Created by clearboy on 2017/10/7.
  */
-function createXHR() {
+~function(){
+	function createXHR() {
     var xhr = null,
         flag = false;
      arr = [
@@ -63,7 +64,7 @@ function createXHR() {
                 }
                 if (xhr.readyState == 4) {
                     var val = xhr.responseText;
-                    if (_default.data === "json") {
+                    if (_default.dataType === "json") {
                         val = "JSON" in window ? JSON.parse(val) : eval("(" + val + ")");
                     }
                     _default.success && _default.success.call(xhr, val);
@@ -74,3 +75,4 @@ function createXHR() {
     }
     window.ajax = ajax;
 }();
+	
